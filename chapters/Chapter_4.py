@@ -7,15 +7,15 @@ import matplotlib.pyplot as plt
 from spacy.cli import download
 
 
-model_name = "en_core_web_sm"
-
-try:
-    nlp = spacy.load(model_name)
-except OSError:
-    download(model_name)
-    nlp = spacy.load(model_name)
-
 def chapter4():
+
+    model_name = "en_core_web_sm"
+
+    try:
+        nlp = spacy.load(model_name)
+    except OSError:
+        download(model_name)
+        nlp = spacy.load(model_name)
 
     # Set Streamlit page configuration
 

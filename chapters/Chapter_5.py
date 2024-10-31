@@ -8,20 +8,19 @@ from wordcloud import WordCloud
 from spacy.cli import download
 
 
-model_name = "en_core_web_sm"
-
-try:
-    nlp = spacy.load(model_name)
-except OSError:
-    download(model_name)
-    nlp = spacy.load(model_name)
-
-# Load BERT sentiment model from Hugging Face
-sentiment_model = pipeline(
-    'sentiment-analysis', model='nlptown/bert-base-multilingual-uncased-sentiment')
-
-
 def chapter5():
+
+    model_name = "en_core_web_sm"
+
+    try:
+        nlp = spacy.load(model_name)
+    except OSError:
+        download(model_name)
+        nlp = spacy.load(model_name)
+
+    # Load BERT sentiment model from Hugging Face
+    sentiment_model = pipeline(
+        'sentiment-analysis', model='nlptown/bert-base-multilingual-uncased-sentiment')
 
     # App Title and Introduction
     st.subheader(
