@@ -32,8 +32,7 @@ def chapter8():
         if not api_key:
             st.error("API Key is required to fetch data.")
             return None
-        url = f"https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={
-            symbol}&interval={interval}&apikey={api_key}&datatype=csv"
+        url = f"https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={symbol}&interval={interval}&apikey={api_key}&datatype=csv"
         try:
             df = pd.read_csv(url)
             df['time'] = pd.to_datetime(df['timestamp'])
@@ -81,8 +80,7 @@ def chapter8():
         if strategy == 'TWAP':
             executed_prices = data['close'].iloc[execution_times]
             executed_volumes = [slice_size] * execution_slices
-            st.write(f"TWAP Simulation: {execution_slices} slices of {
-                     slice_size} units each.")
+            st.write(f"TWAP Simulation: {execution_slices} slices of {slice_size} units each.")
 
         elif strategy == 'VWAP':
             volume_profile = data['volume'].cumsum() / data['volume'].sum()
@@ -90,8 +88,7 @@ def chapter8():
             execution_times = np.clip(execution_times, 0, len(data) - 1)
             executed_prices = data['close'].iloc[execution_times]
             executed_volumes = [slice_size] * execution_slices
-            st.write(f"VWAP Simulation: {execution_slices} slices of {
-                     slice_size} units each.")
+            st.write(f"VWAP Simulation: {execution_slices} slices of {slice_size} units each.")
 
         # Plotting Executed Trades
         fig, ax = plt.subplots(figsize=(10, 4))

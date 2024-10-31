@@ -39,8 +39,7 @@ def chapter2():
 
     # Function to fetch news from Google News RSS Feed
     def fetch_google_news_rss(query, limit=100):
-        feed_url = f"https://news.google.com/rss/search?q={
-            query}+when:1d&hl=en-US&gl=US&ceid=US:en"
+        feed_url = f"https://news.google.com/rss/search?q={query}+when:1d&hl=en-US&gl=US&ceid=US:en"
         feed = feedparser.parse(feed_url)
         news_items = feed.entries[:limit]
         news_data = [{'title': item.title, 'summary': item.summary}
@@ -77,8 +76,7 @@ def chapter2():
 
                     # Correlation with stock price movements
                     mean_sentiment = news_df['Sentiment'].mean()
-                    st.write(f"### Average News Sentiment for '{
-                             query}': {mean_sentiment}")
+                    st.write(f"### Average News Sentiment for '{query}': {mean_sentiment}")
 
                     st.write("### Correlation Analysis")
                     returns = stock_data.pct_change().dropna()
@@ -87,8 +85,7 @@ def chapter2():
                             [mean_sentiment] * len(returns), index=returns.index)
                         correlation = returns[query.upper()].corr(
                             sentiment_series)
-                        st.write(f"Correlation between '{
-                                 query}' News Sentiment and Stock Returns: {correlation: .2f}")
+                        st.write(f"Correlation between '{query}' News Sentiment and Stock Returns: {correlation: .2f}")
                     else:
                         st.warning(
                             "Selected keyword does not match the chosen stock symbols.")

@@ -45,8 +45,7 @@ def chapter1():
             with st.spinner('Fetching stock data...'):
                 # Fetch stock data from Alpha Vantage API
                 def fetch_stock_data(symbol, api_key, interval='daily'):
-                    url = f"https://www.alphavantage.co/query?function=TIME_SERIES_{
-                        interval.upper()}&symbol={symbol}&apikey={api_key}&outputsize=full"
+                    url = f"https://www.alphavantage.co/query?function=TIME_SERIES_{interval.upper()}&symbol={symbol}&apikey={api_key}&outputsize=full"
                     response = requests.get(url)
                     data = response.json()
                     if "Time Series (Daily)" in data:
@@ -64,8 +63,7 @@ def chapter1():
                 st.error(
                     "Error fetching data. Please check your API key and symbol.")
             else:
-                st.success(f"Stock data for {
-                            stock_symbol} fetched successfully!")
+                st.success(f"Stock data for {stock_symbol} fetched successfully!")
 
                 # Calculate returns
                 stock_data['return'] = stock_data['close'].pct_change()

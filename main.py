@@ -50,5 +50,4 @@ st.markdown("""
 """)
 
 document_link = "https://rpc.cfainstitute.org/en/research/foundation/2023/ai-and-big-data-in-investments-handbook"
-st.caption(f"The purpose of this demonstration is solely for educational use and illustration. To access the full legal documentation, please visit [this link]({
-           document_link}). Any reproduction of this demonstration requires prior written consent from QuantUniversity.")
+st.caption(f"The purpose of this demonstration is solely for educational use and illustration. To access the full legal documentation, please visit [this link]({document_link}). Any reproduction of this demonstration requires prior written consent from QuantUniversity.")
