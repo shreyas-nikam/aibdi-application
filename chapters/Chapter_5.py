@@ -6,17 +6,22 @@ from textblob import TextBlob
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 from spacy.cli import download
-
+from pathlib import Path
+import subprocess
 
 def chapter5():
+    
 
-    model_name = "en_core_web_sm"
+    # Define a local directory to install the model
+    model_path = Path("models/en_core_web_sm")
 
-    try:
-        nlp = spacy.load(model_name)
-    except OSError:
-        download(model_name)
-        nlp = spacy.load(model_name)
+    # Check if the model is already available locally
+    if not model_path.exists():
+        # Download and link the model to the local directory
+        subprocess.run(["python3", "-m", "spacy", "download", "en_core_web_sm", "--target", "models"])
+
+    # Load the model from the local path
+    nlp = spacy.load(str(model_path))
 
     # Load BERT sentiment model from Hugging Face
     sentiment_model = pipeline(
