@@ -8,19 +8,18 @@ from spacy.cli import download
 from pathlib import Path
 import subprocess
 
+
 def chapter4():
 
+    from spacy.cli import download
+    from spacy.util import is_package
 
-    # Define a local directory to install the model
-    model_path = Path("models/en_core_web_sm")
+    # Check if 'en_core_web_sm' is already installed, if not, download it
+    if not is_package("en_core_web_sm"):
+        download("en_core_web_sm")
 
-    # Check if the model is already available locally
-    if not model_path.exists():
-        # Download and link the model to the local directory
-        subprocess.run(["python3", "-m", "spacy", "download", "en_core_web_sm", "--target", "models"])
-
-    # Load the model from the local path
-    nlp = spacy.load(str(model_path))
+    # Load the model
+    nlp = spacy.load("en_core_web_sm")
     # Set Streamlit page configuration
 
     # Title and Introduction
