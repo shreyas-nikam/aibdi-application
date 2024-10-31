@@ -13,7 +13,21 @@ from pathlib import Path
 def chapter6():
 
     # Load the model
-    nlp = spacy.load("en_core_web_sm")
+    import spacy
+    from pathlib import Path
+    import subprocess
+
+    # Define a local directory to install the model
+    model_path = Path("models/en_core_web_sm/en_core_web_sm-3.8.0")
+
+    # Check if the model is already available locally
+    if not model_path.exists():
+        # Download and link the model to the local directory
+        subprocess.run(["python3", "-m", "spacy", "download",
+                       "en_core_web_sm", "--target", "models"])
+
+    # Load the model from the local path
+    nlp = spacy.load(str(model_path))
 
     sentiment_model = pipeline(
         'text-classification', model='nlptown/bert-base-multilingual-uncased-sentiment')
