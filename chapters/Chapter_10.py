@@ -4,137 +4,77 @@ import yfinance as yf
 from flaml import AutoML
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error
-from tensorflow.keras import layers, models
 
 
 def chapter10():
-    # Initialize session state for training flag
-    if 'is_training' not in st.session_state:
-        st.session_state.is_training = False
+    import streamlit as st
+    import pandas as pd
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import seaborn as sns
 
-    # Title and Introduction
-    st.subheader("Chapter 10: Accelerated AI and Use Cases in Investment Management")
-    st.markdown("""
-    ### Overview
-    This app demonstrates **accelerated AI techniques** for portfolio optimization, using **AutoML** to predict returns and **Deep Reinforcement Learning** to adjust portfolio allocations.
-    * It aligns with the learnings from **Chapter 10**, which emphasizes using AI to manage risk, optimize investment strategies, and enhance decision-making.
+    # App title and description
+    st.subheader("Chapter 10: Accelerated AI in Investment Management")
+    st.divider()
+    st.write("""
+    ### A Portfolio Analysis Example with ESG and Volatility Data
+    This Streamlit app demonstrates accelerated AI applications in investment management using ESG (Environmental, Social, Governance) factors and financial metrics, 
+    such as returns and volatility. This app is inspired by Chapter 10 of 'Accelerated AI and Use Cases in Investment Management'.
     """)
 
-    # Sidebar for User Input (Disabled when training)
-    if not st.session_state.is_training:
-        st.sidebar.header("User Settings")
-        assets = st.sidebar.multiselect(
-            "Select Assets for Portfolio",
-            ["AAPL", "GOOGL", "MSFT", "TSLA", "AMZN"],
-            default=["AAPL", "GOOGL", "MSFT"],
-            disabled=st.session_state.is_training
-        )
-        start_date = st.sidebar.date_input(
-            "Start Date", pd.to_datetime("2020-01-01"), disabled=st.session_state.is_training)
-        end_date = st.sidebar.date_input(
-            "End Date", pd.to_datetime("2023-01-01"), disabled=st.session_state.is_training)
-    else:
-        st.sidebar.info("Training in progress...")
+    # Generate synthetic data
+    np.random.seed(42)
+    n_assets = 100
+    data = pd.DataFrame({
+        'Asset_ID': [f'Asset_{i+1}' for i in range(n_assets)],
+        'Return': np.random.normal(0.07, 0.02, n_assets),
+        'Volatility': np.random.normal(0.15, 0.05, n_assets),
+        'ESG_Score': np.random.randint(1, 100, n_assets)
+    })
 
-    # Fetch Financial Data for Selected Assets
-    @st.cache_data
-    def load_asset_data(assets, start, end):
-        try:
-            data = yf.download(assets, start=start, end=end)['Adj Close']
-            return data
-        except Exception as e:
-            st.error(f"Error fetching data: {e}")
-            return None
+    # Display data
+    st.write("### Sample Data")
+    st.dataframe(data.head())
 
-    # Load data
-    if not st.session_state.is_training:
-        data = load_asset_data(assets, start_date, end_date)
+    # Sidebar filter options
+    st.sidebar.header("Filter Options")
+    esg_threshold = st.sidebar.slider("Minimum ESG Score", 1, 100, 50)
+    return_threshold = st.sidebar.slider(
+        "Minimum Expected Return", 0.00, 0.15, 0.05)
+    volatility_max = st.sidebar.slider("Maximum Volatility", 0.05, 0.3, 0.15)
 
-    if data is not None:
-        st.write("### Asset Prices")
-        st.line_chart(data)
+    # Filtered Data
+    filtered_data = data[(data['ESG_Score'] >= esg_threshold) &
+                         (data['Return'] >= return_threshold) &
+                         (data['Volatility'] <= volatility_max)]
+    st.write("### Filtered Portfolio")
+    st.write(f"Number of assets after filtering: {filtered_data.shape[0]}")
+    st.dataframe(filtered_data)
 
-        # Calculate Returns
-        returns = data.pct_change().dropna()
+    # Data visualization
+    st.write("### Portfolio Visualization")
 
-        # Display Returns
-        st.write("### Asset Returns")
-        st.line_chart(returns)
+    # Plot ESG scores vs. returns
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.scatterplot(data=filtered_data, x='ESG_Score', y='Return',
+                    hue='Volatility', palette="viridis", ax=ax)
+    ax.set_title("ESG Scores vs. Returns (Filtered)")
+    st.pyplot(fig)
 
-        # Data Preprocessing
-        returns = data.pct_change().dropna()  # Calculate daily returns
-        returns['Rolling_Mean'] = returns.mean(axis=1).rolling(
-            window=5).mean()  # 5-day rolling mean
-        returns['Rolling_Std'] = returns.mean(axis=1).rolling(
-            window=5).std()  # 5-day rolling std
-        returns['Momentum'] = returns.mean(
-            axis=1).diff(5)  # Momentum over 5 days
+    # Portfolio Analysis
+    st.write("### Portfolio Analysis")
 
-        # Drop NaN values caused by rolling calculations
-        returns = returns.dropna()
+    mean_return = filtered_data['Return'].mean()
+    mean_volatility = filtered_data['Volatility'].mean()
+    st.write(f"**Mean Expected Return:** {mean_return:.2%}")
+    st.write(f"**Mean Volatility:** {mean_volatility:.2%}")
 
-        # Prepare data for AutoML
-        X = returns[['Rolling_Mean', 'Rolling_Std', 'Momentum']
-                    ].values  # Use engineered features
-        y = returns.mean(axis=1).values  # Aggregate returns as target variable
-
-        # Split the data into training and testing sets
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=0.2, random_state=42)
-
-        # Initialize and train the AutoML model
-        automl = AutoML()
-
-        # Define AutoML settings
-        automl_settings = {
-            "time_budget": 60,  # Time limit in seconds
-            "metric": 'mse',    # Metric to optimize (mean squared error)
-            "task": 'regression',
-            "log_file_name": 'automl_stock_returns.log'
-        }
-
-        # Cache AutoML Model Training
-        @st.cache_resource
-        def train_automl(X_train, y_train):
-            automl = AutoML()
-            automl_settings = {
-                "time_budget": 60,  # Time limit in seconds
-                "metric": 'mse',    # Metric to optimize (mean squared error)
-                "task": 'regression',
-                "log_file_name": 'automl_stock_returns.log'
-            }
-            automl.fit(X_train, y_train, **automl_settings)
-            return automl
-
-        st.session_state.is_training = True
-        with st.spinner("Training AutoML Model..."):
-            automl = train_automl(X_train, y_train)
-        st.session_state.is_training = False
-
-        # Make predictions
-        y_pred = automl.predict(X_test)
-
-        # Evaluate the model
-        mse = mean_squared_error(y_test, y_pred)
-
-        # Plot results
-        st.write("### AutoML Model Evaluation")
-        st.write(f"Mean Squared Error: {mse:.4f}")
-
-        plt.figure(figsize=(10, 6))
-        plt.plot(y_test, label='Actual Returns', color='blue')
-        plt.plot(y_pred, label='Predicted Returns', color='red')
-        plt.xlabel('Time')
-        plt.ylabel('Returns')
-        plt.title('Enhanced AutoML Predicted vs. Actual Returns')
-        plt.legend()
-        st.pyplot(plt)
-
-    else:
-        st.info("Please select assets and date range to load data.")
-
-    st.markdown("""
-    ### How This App Relates to Chapter 10
-    This app demonstrates how **accelerated AI techniques**, like AutoML and deep reinforcement learning, can be used for portfolio optimization.
+    # Conclusion and relevance to Chapter 10
+    st.write("""
+    ## Conclusion
+    This app provides a simplified simulation of how accelerated AI applications can support investment management by enabling large-scale, 
+    real-time filtering and visualization of investment data based on ESG factors and financial metrics. In Chapter 10, we explore the advantages of using 
+    accelerated computing platforms, such as GPUs, in investment management for tasks like ESG monitoring, risk management, and portfolio analysis. 
+    Leveraging these platforms allows investment firms to process vast amounts of data more efficiently, make quicker decisions, and maintain robust 
+    and explainable AI models for a sustainable and data-driven approach to investing.
     """)
