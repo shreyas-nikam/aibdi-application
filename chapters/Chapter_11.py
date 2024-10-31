@@ -6,14 +6,10 @@ import matplotlib.pyplot as plt
 
 
 def chapter11():
-    import streamlit as st
-    import pandas as pd
-    import numpy as np
-    import yfinance as yf
-    import matplotlib.pyplot as plt
 
     # Title and Introduction
-    st.title("Interactive Symbolic AI for Portfolio Management")
+    st.subheader(
+        "Chapter 11: Symbolic AI: A Case Study")
     st.markdown("""
     ### Overview
     This interactive app demonstrates **Symbolic AI** in portfolio management by automating tasks like **rebalancing** and **risk assessment** using rule-based logic. It uses real-time financial data and provides dynamic, interactive controls for adjusting portfolio weights and risk thresholds.

@@ -1,12 +1,21 @@
+
+import PyPDF2
 import streamlit as st
 from transformers import pipeline
 import spacy
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
-
+from spacy.cli import download
 
 # Load pre-trained NLP models
-nlp = spacy.load("en_core_web_sm")
+model_name = "en_core_web_sm"
+
+try:
+    nlp = spacy.load(model_name)
+except OSError:
+    download(model_name)
+    nlp = spacy.load(model_name)
+
 sentiment_model = pipeline(
     'text-classification', model='nlptown/bert-base-multilingual-uncased-sentiment')
 
@@ -14,7 +23,8 @@ sentiment_model = pipeline(
 def chapter6():
 
     # App Title
-    st.header('Dynamic ESG Scoring from ESG Documents')
+    st.subheader(
+        'Chapter 6: Extracting Text-Based ESG Insights: A Hands-On Guide')
     st.divider()
     st.markdown("""
     This application allows users to upload ESG documents and obtain dynamic ESG scoring based on NLP-driven thematic extraction. 
@@ -35,7 +45,7 @@ def chapter6():
         if uploaded_file.type == 'text/plain':
             document_text = uploaded_file.read().decode('utf-8')
         else:
-            import PyPDF2
+            
             pdf_reader = PyPDF2.PdfReader(uploaded_file)
             document_text = ""
             for page in pdf_reader.pages:

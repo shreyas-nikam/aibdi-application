@@ -14,7 +14,7 @@ def chapter10():
         st.session_state.is_training = False
 
     # Title and Introduction
-    st.title("AI-Powered Portfolio Optimization")
+    st.subheader("Chapter 10: Accelerated AI and Use Cases in Investment Management")
     st.markdown("""
     ### Overview
     This app demonstrates **accelerated AI techniques** for portfolio optimization, using **AutoML** to predict returns and **Deep Reinforcement Learning** to adjust portfolio allocations.

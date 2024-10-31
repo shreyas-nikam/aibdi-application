@@ -1,13 +1,20 @@
+import PyPDF2
 import streamlit as st
 from transformers import pipeline
 import spacy
 from textblob import TextBlob
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
+from spacy.cli import download
 
 
-# Load spaCy model for entity recognition
-nlp = spacy.load("en_core_web_sm")
+model_name = "en_core_web_sm"
+
+try:
+    nlp = spacy.load(model_name)
+except OSError:
+    download(model_name)
+    nlp = spacy.load(model_name)
 
 # Load BERT sentiment model from Hugging Face
 sentiment_model = pipeline(
@@ -17,7 +24,8 @@ sentiment_model = pipeline(
 def chapter5():
 
     # App Title and Introduction
-    st.header('Sentiment and Tone Analysis of Financial Documents')
+    st.subheader(
+        'Chapter 5: Advances in Natural Language Understanding for Investment Management')
     st.divider()
     st.markdown("""
     This app allows users to upload financial documents, perform sentiment analysis, analyze tone, and identify entities using pre-trained NLP models.
@@ -39,7 +47,6 @@ def chapter5():
         if uploaded_file.type == 'text/plain':
             document_text = uploaded_file.read().decode('utf-8')
         else:
-            import PyPDF2
             pdf_reader = PyPDF2.PdfReader(uploaded_file)
             document_text = ""
             for page in pdf_reader.pages:

@@ -1,9 +1,6 @@
 import streamlit as st
 import pandas as pd
 import nltk
-from nltk.tokenize import word_tokenize
-import streamlit as st
-import pandas as pd
 from transformers import pipeline
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
@@ -19,7 +16,7 @@ nltk.download('punkt_tab')
 def chapter9():
 
     # Title and Introduction
-    st.title("Customer Feedback Insights for Finance")
+    st.subheader("Chapter 9: Intelligent Customer Service in Finance")
     st.markdown("""
     ### Overview
     This application provides **insights into customer feedback** using NLP techniques. It helps financial institutions identify key themes, sentiment trends, and frequently mentioned keywords to enhance customer service strategies.

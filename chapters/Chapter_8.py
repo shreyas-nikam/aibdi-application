@@ -8,7 +8,8 @@ import seaborn as sns
 
 def chapter8():
     # Title and Introduction
-    st.title('Microstructure Data-Driven Execution Strategies')
+    st.subheader(
+        'Chapter 8: ML for Microstructure Data-Driven Execution Algorithms')
     st.markdown("""
     ### Overview
     This app allows you to interact with **limit order book (LOB) data**, visualize **order book imbalance**, and simulate **execution strategies** like TWAP and VWAP.
@@ -106,7 +107,8 @@ def chapter8():
         st.pyplot(fig)  # Ensure the plot updates dynamically
 
     else:
-        st.warning("Please enter a valid API key to load data.")
+        st.warning(
+            "Please enter a valid API key to load data. You can get it here: https://www.alphavantage.co/support/#api-key")
 
     # Conclusion
     st.markdown("""

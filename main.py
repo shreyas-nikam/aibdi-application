@@ -10,7 +10,7 @@ from chapters.Chapter_7 import chapter7
 from chapters.Chapter_8 import chapter8
 from chapters.Chapter_9 import chapter9
 from chapters.Chapter_10 import chapter10
-from chapters.chapter_11 import chapter11
+from chapters.Chapter_11 import chapter11
 
 st.set_page_config(layout="wide")
 st.write("# Welcome to AI and Big Data Applications in Investments Course!")
@@ -39,5 +39,9 @@ page_names_to_funcs[demo_name]()
 # add a footer with a copyright symbol and quantuniversity
 st.markdown("""
 ---
-©️ [QuantUniversity](https://www.quantuniversity.com), 2024
+© 2024 [QuantUniversity](https://www.quantuniversity.com/). All Rights Reserved.
 """)
+
+document_link = "https://rpc.cfainstitute.org/en/research/foundation/2023/ai-and-big-data-in-investments-handbook"
+st.caption(f"The purpose of this demonstration is solely for educational use and illustration. To access the full legal documentation, please visit [this link]({
+           document_link}). Any reproduction of this demonstration requires prior written consent from QuantUniversity.")

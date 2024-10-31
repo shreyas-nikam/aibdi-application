@@ -8,7 +8,7 @@ import seaborn as sns
 
 def chapter3():
     # App Title
-    st.title('Interactive Long-Term Financial Scenario Simulation')
+    st.subheader('Chapter 3: Data Science for Active and Long-Term Fundamental Investing')
     st.divider()
     st.markdown("""
     This app allows you to simulate different scenarios for long-term financial indicators and visualize their potential impact on long-term returns. You can also compare multiple scenarios side by side.""")

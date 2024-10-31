@@ -10,7 +10,8 @@ import matplotlib.pyplot as plt
 
 def chapter7():
     # App Title
-    st.title('Advanced Trading Strategy Simulation')
+    st.subheader(
+        'Chapter 7: Machine Learning and Big Data Trade Execution Support')
     st.divider()
     st.markdown("""
     This app allows users to simulate trading strategies with **dynamic predictions of transaction costs**. Users can adjust parameters like **trade volume**, **market impact**, and **slippage** to explore different execution outcomes.
@@ -24,7 +25,7 @@ def chapter7():
     trade_volume = st.sidebar.number_input(
         'Total Trade Volume', min_value=1000, max_value=1000000, value=100000, step=1000)
     strategy_type = st.sidebar.selectbox('Execution Strategy Type', [
-                                         'TWAP', 'VWAP', 'POV (Proportion of Volume)'], default='VWAP')
+                                         'VWAP', 'TWAP', 'POV (Proportion of Volume)'])
     market_impact = st.sidebar.slider(
         'Market Impact Factor', min_value=0.0, max_value=0.1, value=0.05, step=0.01)
     slippage = st.sidebar.slider(

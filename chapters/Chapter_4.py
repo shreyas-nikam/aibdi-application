@@ -2,24 +2,26 @@ import streamlit as st
 from textblob import TextBlob
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import spacy
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+from spacy.cli import download
 
+
+model_name = "en_core_web_sm"
+
+try:
+    nlp = spacy.load(model_name)
+except OSError:
+    download(model_name)
+    nlp = spacy.load(model_name)
 
 def chapter4():
-
-    import streamlit as st
-    from textblob import TextBlob
-    from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-    import spacy
-    from wordcloud import WordCloud
-    import matplotlib.pyplot as plt
-
-    # Load spaCy model for entity recognition
-    nlp = spacy.load("en_core_web_sm")
 
     # Set Streamlit page configuration
 
     # Title and Introduction
-    st.title('NLP-based Financial News Sentiment Analysis with Word Clouds')
+    st.subheader(
+        'Chapter 4: Unlocking Insights and Opportunities with NLP in Asset Management')
     st.divider()
     st.markdown("""
     This app lets you input financial news text to analyze sentiment, identify entities, and visualize results using word clouds.

@@ -8,10 +8,9 @@ import plotly.express as px
 
 
 def chapter2():
-   
 
     # Title and Introduction
-    st.title("Alternative Data Analysis for Investment")
+    st.subheader("Chapter 2: Alternative Data and AI in Investment Research")
     st.divider()
     st.markdown("""
     ### Overview
@@ -58,7 +57,7 @@ def chapter2():
         # News sentiment analysis
         st.subheader("Sentiment Analysis from Google News")
         query = st.text_input(
-            "Enter keyword for sentiment analysis (e.g., 'Apple', 'Google')", "Apple")
+            "Enter keyword for sentiment analysis (e.g., 'AAPL', 'GOOGL')", "AAPL")
         article_count = st.slider(
             "Number of News Articles to Analyze", 5, 50, 10)
 
