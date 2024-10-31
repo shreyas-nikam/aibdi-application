@@ -11,6 +11,13 @@ from chapters.Chapter_8 import chapter8
 from chapters.Chapter_9 import chapter9
 from chapters.Chapter_10 import chapter10
 from chapters.Chapter_11 import chapter11
+import subprocess
+
+
+@st.cache_resource
+def download_en_core_web_sm():
+    subprocess.run(["python", "-m", "spacy", "download", "en_core_web_sm"])
+
 
 st.set_page_config(layout="wide")
 st.write("# Welcome to AI and Big Data Applications in Investments Course!")

@@ -11,14 +11,6 @@ import subprocess
 
 def chapter4():
 
-    from spacy.cli import download
-    from spacy.util import is_package
-
-    # Check if 'en_core_web_sm' is already installed, if not, download it
-    if not is_package("en_core_web_sm"):
-        download("en_core_web_sm")
-
-    # Load the model
     nlp = spacy.load("en_core_web_sm")
     # Set Streamlit page configuration
 
