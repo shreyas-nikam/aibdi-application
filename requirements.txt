@@ -15,6 +15,6 @@ tensorflow
 tf-keras
 transformers
 nltk
-"flaml[automl]"
+flaml[automl]
 vaderSentiment
 pypdf2
