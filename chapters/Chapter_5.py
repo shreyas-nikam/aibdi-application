@@ -101,8 +101,9 @@ def chapter5():
 
         # Display entities
         if entities:
-            for entity, label in entities:
-                st.write(f"**Entity**: {entity}, **Type**: {label}")
+            with st.expander("View Entities"):
+                for entity, label in entities:
+                    st.write(f"**Entity**: {entity}, **Type**: {label}")
         else:
             st.write("No entities detected.")
 

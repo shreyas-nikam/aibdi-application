@@ -28,9 +28,22 @@ def chapter8():
         'Order Volume', min_value=100, max_value=10000, step=100, value=1000)
 
     # Fetching LOB data using Alpha Vantage API (e.g., IBM)
+    @st.cache_data
+    def fetch_default_lob_data():
+        # Provide default cached data for demonstration if no API key is provided
+        dates = pd.date_range(start="2022-01-01", periods=100, freq="T")
+        data = pd.DataFrame({
+            'time': dates,
+            'open': np.random.uniform(130, 135, size=100),
+            'high': np.random.uniform(135, 140, size=100),
+            'low': np.random.uniform(125, 130, size=100),
+            'close': np.random.uniform(130, 135, size=100),
+            'volume': np.random.randint(1000, 5000, size=100)
+        })
+        return data
+
     def fetch_lob_data(symbol='IBM', interval='1min', api_key=None):
         if not api_key:
-            st.error("API Key is required to fetch data.")
             return None
         url = f"https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={symbol}&interval={interval}&apikey={api_key}&datatype=csv"
         try:
@@ -41,15 +54,17 @@ def chapter8():
             st.error(f"Error fetching data from Alpha Vantage: {e}")
             return None
 
-    # Load LOB data only if the API key is provided
+    # Load LOB data depending on whether the API key is provided
     if api_key:
         data = fetch_lob_data(api_key=api_key)
+        st.success("Real-time data fetched successfully!")
     else:
-        data = None
+        data = fetch_default_lob_data()
+        st.warning("Using cached data as no API key is provided. You can update the key in the sidebar to use realtime data. You can get the API key here: https://www.alphavantage.co/support/#api-key")
 
     # Display data preview and analysis only if data is available
     if data is not None:
-        st.subheader('Real-Time LOB Data')
+        st.subheader('LOB Data Preview')
         st.write(data.head())
 
         # Feature Engineering: Order Book Imbalance (OBI)
@@ -65,7 +80,7 @@ def chapter8():
         ax.set_title('Order Book Imbalance Over Time')
         ax.set_xlabel('Time')
         ax.set_ylabel('OBI')
-        st.pyplot(fig)  # Ensure the plot updates dynamically
+        st.pyplot(fig)
 
         # Simulating Execution Strategies
         st.subheader('Simulated Execution Strategy')
@@ -100,14 +115,15 @@ def chapter8():
         ax.set_xlabel('Time')
         ax.set_ylabel('Price')
         ax.legend()
-        st.pyplot(fig)  # Ensure the plot updates dynamically
+        st.pyplot(fig)
 
     else:
         st.warning(
-            "Please enter a valid API key to load data. You can get it here: https://www.alphavantage.co/support/#api-key")
+            "Please enter a valid API key to load real-time data. You can get it here: https://www.alphavantage.co/support/#api-key")
 
     # Conclusion
     st.markdown("""
     ### How This App Relates to Chapter 8
     This application demonstrates the concepts discussed in **Chapter 8** by allowing users to interact with **real-time microstructure data**, visualize **order book imbalances**, and simulate execution strategies like **TWAP** and **VWAP**. This hands-on experience helps in understanding how ML models can optimize trade execution based on LOB dynamics and minimize market impact.
     """)
+

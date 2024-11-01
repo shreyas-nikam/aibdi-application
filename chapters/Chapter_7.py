@@ -23,7 +23,7 @@ def chapter7():
     trade_volume = st.sidebar.number_input(
         'Total Trade Volume', min_value=1000, max_value=1000000, value=100000, step=1000)
     strategy_type = st.sidebar.selectbox('Execution Strategy Type', [
-                                         'VWAP', 'TWAP', 'POV (Proportion of Volume)'])
+                                         'TWAP', 'VWAP', 'POV (Proportion of Volume)'])
     market_impact = st.sidebar.slider(
         'Market Impact Factor', min_value=0.0, max_value=0.1, value=0.05, step=0.01)
     slippage = st.sidebar.slider(
@@ -34,19 +34,28 @@ def chapter7():
     market_condition = st.sidebar.selectbox(
         'Market Condition', ['Stable', 'Rising', 'Falling'])
     execution_period = st.sidebar.slider(
-        'Execution Period (Slices)', min_value=5, max_value=50, value=10)
+        'Execution Period (Slices)', min_value=30, max_value=100, value=50)
 
-    # Generate Simulated Market Data
-    np.random.seed(42)
+    # Set different random seeds for each market condition for variation
     if market_condition == 'Stable':
-        market_volumes = np.random.uniform(5000, 7000, execution_period)
-        market_prices = np.linspace(100, 100, execution_period)
+        np.random.seed(42)
+        price_changes = np.random.normal(0, 0.002, execution_period)
+        volume_mean = 8.5
     elif market_condition == 'Rising':
-        market_volumes = np.linspace(5000, 10000, execution_period)
-        market_prices = np.linspace(100, 110, execution_period)
-    else:
-        market_volumes = np.linspace(10000, 5000, execution_period)
-        market_prices = np.linspace(110, 100, execution_period)
+        np.random.seed(24)
+        price_changes = np.random.normal(0.002, 0.003, execution_period)  # Stronger upward drift
+        volume_mean = 8.7
+    else:  # Falling
+        np.random.seed(84)
+        price_changes = np.random.normal(-0.002, 0.003, execution_period)  # Stronger downward drift
+        volume_mean = 8.3
+
+    # Generate market prices with a random walk model
+    initial_price = 100
+    market_prices = initial_price * np.cumprod(1 + price_changes)
+
+    # Generate market volumes with a log-normal distribution based on the mean
+    market_volumes = np.random.lognormal(mean=volume_mean, sigma=0.2, size=execution_period)
 
     # Define Execution Strategies
     def twap_execution(volume, period):
@@ -102,23 +111,31 @@ def chapter7():
     st.subheader('Strategy Execution and Transaction Costs')
     fig, ax1 = plt.subplots(figsize=(12, 6))
 
+    # Execution Volume Plot
     ax1.plot(df['Time Slice'], df['Execution Volume'],
-             label='Execution Volume', color='b', marker='o')
+             label='Execution Volume', color='blue', marker='o', linestyle='-')
     ax1.set_xlabel('Time Slice')
-    ax1.set_ylabel('Execution Volume', color='b')
-    ax1.tick_params(axis='y', labelcolor='b')
+    ax1.set_ylabel('Execution Volume', color='blue')
+    ax1.tick_params(axis='y', labelcolor='blue')
 
+    # Transaction Cost Plot on a secondary y-axis
     ax2 = ax1.twinx()
     ax2.plot(df['Time Slice'], df['Transaction Cost'],
-             label='Transaction Cost', color='r', linestyle='--', marker='x')
-    ax2.plot(df['Time Slice'], predicted_costs,
-             label='Predicted Cost', color='g', linestyle=':')
-    ax2.set_ylabel('Transaction Cost', color='r')
-    ax2.tick_params(axis='y', labelcolor='r')
+             label='Transaction Cost', color='red', linestyle='--', marker='x')
+    ax2.set_ylabel('Transaction Cost', color='red')
+    ax2.tick_params(axis='y', labelcolor='red')
 
+    # Predicted Cost Plot on a separate secondary y-axis
+    ax3 = ax1.twinx()
+    ax3.spines['right'].set_position(('outward', 60))  # Offset the third axis
+    ax3.plot(df['Time Slice'], predicted_costs,
+             label='Predicted Cost', color='green', linestyle=':', marker='s')
+    ax3.set_ylabel('Predicted Cost', color='green')
+    ax3.tick_params(axis='y', labelcolor='green')
+
+    # Add legends for all plots
     fig.tight_layout()
-    fig.legend(loc='upper left', bbox_to_anchor=(
-        0, 1), bbox_transform=ax1.transAxes)
+    fig.legend(loc='upper left', bbox_to_anchor=(0, 1), bbox_transform=ax1.transAxes)
     st.pyplot(fig)
 
     # Add Explanation of Relation to Chapter 7
@@ -131,3 +148,4 @@ def chapter7():
     3. **Market Adaptation**: The app simulates different market conditions (stable, rising, falling), reflecting the chapter’s emphasis on adapting execution strategies to real-time market changes.
     4. **Interactive Learning**: Users can adjust parameters like trade volume, market impact, and slippage, mirroring the chapter’s approach to hands-on optimization of trade execution.
     """)
+

@@ -76,7 +76,7 @@ def chapter2():
 
                     # Correlation with stock price movements
                     mean_sentiment = news_df['Sentiment'].mean()
-                    st.write(f"### Average News Sentiment for '{query}': {mean_sentiment}")
+                    st.write(f"### Average News Sentiment for '{query}': {mean_sentiment : .2f}")
 
                     st.write("### Correlation Analysis")
                     returns = stock_data.pct_change().dropna()
@@ -85,7 +85,7 @@ def chapter2():
                             [mean_sentiment] * len(returns), index=returns.index)
                         correlation = returns[query.upper()].corr(
                             sentiment_series)
-                        st.write(f"Correlation between '{query}' News Sentiment and Stock Returns: {correlation: .2f}")
+                        st.write(f"Correlation between '{query}' News Sentiment and Stock Returns: {correlation: .2e}")
                     else:
                         st.warning(
                             "Selected keyword does not match the chosen stock symbols.")
