@@ -98,10 +98,6 @@ spacy-loggers==1.0.5
 srsly==2.4.8
 streamlit==1.39.0
 tenacity==9.0.0
-tensorboard==2.18.0
-tensorboard-data-server==0.7.2
-tensorflow==2.18.0
-tensorflow-io-gcs-filesystem==0.37.1
 termcolor==2.5.0
 textblob==0.18.0.post0
 tf_keras==2.18.0
